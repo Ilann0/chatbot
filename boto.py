@@ -2,6 +2,7 @@
 This is the template server side for ChatBot
 """
 from bottle import route, run, template, static_file, request
+from bototo.main import dispatch
 import json
 
 
@@ -13,7 +14,9 @@ def index():
 @route("/chat", method='POST')
 def chat():
     user_message = request.POST.get('msg')
-    return json.dumps({"animation": "inlove", "msg": user_message})
+    msg, animation =  dispatch(user_message)
+    
+    return json.dumps({"animation": animation, "msg": msg})
 
 
 @route("/test", method='POST')
@@ -38,7 +41,8 @@ def images(filename):
 
 
 def main():
-    run(host='localhost', port=7000)
+    run(host='localhost', port=7000, reloader=True)
+
 
 if __name__ == '__main__':
     main()
